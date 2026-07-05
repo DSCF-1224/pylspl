@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pylspl"
+version = "0.0.1"
+description = "Python implementation of Least Squares Reference Plane (LSPL) fitting and flatness evaluation for 3D points."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "numpy",
+    "pytensor",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "pylint",
+]
+
+[project.urls]
+Repository = "https://github.com/DSCF-1224/pylspl"
+
+[tool.setuptools]
+license-files = ["LICENSE"]
+
+[tool.setuptools.packages.find]
+include = ["pylspl*"]
