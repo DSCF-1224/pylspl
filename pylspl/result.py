@@ -25,3 +25,15 @@ class Vector3D:
             self.y - other.y,
             self.z - other.z
         )
+
+
+@dataclass(frozen=True)
+class Plane3D:
+    """A plane in 3D space, defined by a point on the plane and a normal vector."""
+
+    point: Vector3D
+    normal: Vector3D
+
+    def signed_distance(self, point: Vector3D) -> Any:
+        """Return the signed distance from designated point to this plane."""
+        return (point - self.point).dot(self.normal)
