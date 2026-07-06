@@ -37,3 +37,10 @@ class Plane3D:
     def signed_distance(self, point: Vector3D) -> Any:
         """Return the signed distance from designated point to this plane."""
         return (point - self.point).dot(self.normal)
+
+
+@dataclass(frozen=True)
+class FittedPlane3D(Plane3D):
+    """Plane obtained from a fitting algorithm, with its evaluated flatness."""
+
+    flatness: Any
