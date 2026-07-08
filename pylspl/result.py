@@ -1,5 +1,6 @@
 """Result models for plane fitting algorithms."""
 
+import math
 from dataclasses import dataclass
 from typing import Any
 
@@ -12,11 +13,13 @@ class Vector3D:
     y: Any
     z: Any
 
-    def dot(self, other: "Vector3D") -> Any:
-        """Return the dot product with another vector."""
-        return (self.x * other.x) + \
-               (self.y * other.y) + \
-               (self.z * other.z)
+    def __mul__(self, other: Any) -> "Vector3D":
+        """Return this vector scaled by a scalar."""
+        return Vector3D(
+            self.x * other,
+            self.y * other,
+            self.z * other
+        )
 
     def __sub__(self, other: "Vector3D") -> "Vector3D":
         """Return the difference with another vector."""
@@ -25,6 +28,38 @@ class Vector3D:
             self.y - other.y,
             self.z - other.z
         )
+
+    def __truediv__(self, divisor: float) -> "Vector3D":
+        """
+        Return this vector scaled by the reciprocal of divisor.
+
+        Raises
+        ------
+        ZeroDivisionError
+            If divisor is zero.
+        """
+        return self * (1 / divisor)
+
+    def dot(self, other: "Vector3D") -> Any:
+        """Return the dot product with another vector."""
+        return (self.x * other.x) + \
+               (self.y * other.y) + \
+               (self.z * other.z)
+
+    def norm(self) -> Any:
+        """Return the Euclidean norm (magnitude) of this vector."""
+        return math.sqrt(self.dot(self))
+
+    def normalize(self) -> "Vector3D":
+        """
+        Return a unit vector in the same direction as this vector.
+
+        Raises
+        ------
+        ZeroDivisionError
+            If this vector has zero norm.
+        """
+        return self / self.norm()
 
 
 @dataclass(frozen=True)
