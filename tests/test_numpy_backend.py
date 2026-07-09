@@ -81,3 +81,14 @@ def test_mismatched_length(x_len: int, y_len: int, z_len: int) -> None:
     """Reject points with mismatched coordinate lengths."""
     with pytest.raises(ValueError, match="must have the same length"):
         fit_lspl(x=np.zeros(x_len), y=np.zeros(y_len), z=np.zeros(z_len))
+
+
+@pytest.mark.parametrize("num_points", range(0, 3))
+def test_requires_at_least_three_points(num_points: int) -> None:
+    """Reject fewer than three points."""
+    with pytest.raises(ValueError, match="at least 3 points are required"):
+        fit_lspl(
+            x=np.zeros(num_points),
+            y=np.zeros(num_points),
+            z=np.zeros(num_points)
+        )
