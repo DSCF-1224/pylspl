@@ -66,3 +66,18 @@ def test_fit_tilted_plane(num_points: int, seed: int) -> None:
 
     # The flatness should be zero
     assert result.flatness == pytest.approx(0.0)
+
+
+@pytest.mark.parametrize(
+    "x_len, y_len, z_len",
+    [
+        (3, 4, 4), (4, 3, 4), (4, 4, 3),
+        (5, 4, 4), (4, 5, 4), (4, 4, 5),
+        (3, 4, 5), (4, 5, 3), (5, 3, 4),
+        (5, 4, 3), (4, 3, 5), (3, 5, 4)
+    ],
+)
+def test_mismatched_length(x_len: int, y_len: int, z_len: int) -> None:
+    """Reject points with mismatched coordinate lengths."""
+    with pytest.raises(ValueError, match="must have the same length"):
+        fit_lspl(x=np.zeros(x_len), y=np.zeros(y_len), z=np.zeros(z_len))
