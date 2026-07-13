@@ -49,6 +49,29 @@ def _construct_covariance_matrix(
     )
 
 
+def _validate_lengths(x: ptv.TensorVariable, y: ptv.TensorVariable, z: ptv.TensorVariable) -> None:
+    """
+    Validate x, y, z lengths when statically known.
+
+    Raises
+    ------
+    ValueError
+        If x, y, and z have different lengths or fewer than
+        three points are provided (only when shapes are
+        statically known).
+    """
+
+    size_x = x.type.shape[0]
+    size_y = y.type.shape[0]
+    size_z = z.type.shape[0]
+
+    if (size_x is not None) and (size_y is not None) and (size_z is not None):
+        if size_x != size_y or size_x != size_z:
+            raise ValueError("x, y, and z must have the same length")
+        if size_x < 3:
+            raise ValueError("at least 3 points are required")
+
+
 def fit(x: pt.TensorLike, y: pt.TensorLike, z: pt.TensorLike) -> FittedPlane3D:
     """
     Fit a least-squares reference plane (orthogonal-distance minimization)
@@ -81,15 +104,7 @@ def fit(x: pt.TensorLike, y: pt.TensorLike, z: pt.TensorLike) -> FittedPlane3D:
     y_tensor = ptb.as_tensor_variable(y)
     z_tensor = ptb.as_tensor_variable(z)
 
-    size_x = x_tensor.type.shape[0]
-    size_y = y_tensor.type.shape[0]
-    size_z = z_tensor.type.shape[0]
-
-    if (size_x is not None) and (size_y is not None) and (size_z is not None):
-        if size_x != size_y or size_x != size_z:
-            raise ValueError("x, y, and z must have the same length")
-        if size_x < 3:
-            raise ValueError("at least 3 points are required")
+    _validate_lengths(x=x_tensor, y=y_tensor, z=z_tensor)
 
     centroid = Vector3D(x=ptm.mean(x_tensor), y=ptm.mean(
         y_tensor), z=ptm.mean(z_tensor))
