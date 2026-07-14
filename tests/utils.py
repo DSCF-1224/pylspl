@@ -1,0 +1,60 @@
+"""Test utilities."""
+
+import numpy as np
+import pytest
+
+
+def make_axis_aligned_coords(
+    axis: str, num_points: int, seed: int = 42
+) -> dict[str, np.ndarray]:
+    """
+    Build point coordinates lying on the {axis}=0 plane.
+
+    Parameters
+    ----------
+    axis
+        Which axis ("x", "y", or "z") the plane is flattened along.
+    num_points
+        Number of points to generate.
+    seed
+        Seed for the random coordinate generator.
+
+    Returns
+    -------
+    dict[str, np.ndarray]
+        Coordinates keyed by "x", "y", "z".
+    """
+
+    rng = np.random.default_rng(seed=seed)
+
+    coords = {
+        "x": rng.uniform(low=-1.0, high=1.0, size=num_points),
+        "y": rng.uniform(low=-1.0, high=1.0, size=num_points),
+        "z": rng.uniform(low=-1.0, high=1.0, size=num_points),
+    }
+
+    coords[axis] = np.zeros(num_points)
+
+    return coords
+
+
+def assert_normal_aligned_with_axis(normal: dict[str, float], axis: str) -> None:
+    """
+    Assert that a fitted normal is parallel to the given coordinate axis.
+
+    The sign of the normal is not determined by the fitting algorithm,
+    so alignment is checked via absolute value.
+
+    Parameters
+    ----------
+    normal
+        Fitted normal components keyed by "x", "y", "z".
+    axis
+        The axis the normal is expected to align with.
+    """
+
+    for target_axis in "xyz":
+        if target_axis == axis:
+            assert abs(abs(normal[target_axis]) - 1.0) == pytest.approx(0.0)
+        else:
+            assert normal[target_axis] == pytest.approx(0.0)

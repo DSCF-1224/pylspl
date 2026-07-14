@@ -3,6 +3,8 @@
 import numpy as np
 import pytest
 
+import utils
+
 from pylspl.numpy_backend import fit as fit_lspl
 from pylspl.result import Vector3D
 
@@ -65,15 +67,7 @@ def test_fit_exact_plane(axis: str, num_points: int) -> None:
     the normal should point along {axis} and the flatness should be 0.
     """
 
-    rng = np.random.default_rng(seed=42)
-
-    coords = {
-        "x": rng.uniform(low=-1.0, high=1.0, size=num_points),
-        "y": rng.uniform(low=-1.0, high=1.0, size=num_points),
-        "z": rng.uniform(low=-1.0, high=1.0, size=num_points),
-    }
-
-    coords[axis] = np.zeros(num_points)
+    coords = utils.make_axis_aligned_coords(axis=axis, num_points=num_points)
 
     result = fit_lspl(x=coords["x"], y=coords["y"], z=coords["z"])
 
