@@ -74,11 +74,7 @@ def test_fit_exact_plane(axis: str, num_points: int) -> None:
     normal = {"x": result.normal.x, "y": result.normal.y, "z": result.normal.z}
 
     # The normal should be parallel to the {axis} axis (sign is undefined)
-    for target_axis in "xyz":
-        if target_axis == axis:
-            assert abs(abs(normal[target_axis]) - 1.0) == pytest.approx(0.0)
-        else:
-            assert normal[target_axis] == pytest.approx(0.0)
+    utils.assert_normal_aligned_with_axis(normal, axis)
 
     # The flatness should be zero
     assert result.flatness == pytest.approx(0.0)
