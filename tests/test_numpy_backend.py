@@ -6,7 +6,6 @@ import pytest
 import utils
 
 from pylspl.numpy_backend import fit as fit_lspl
-from pylspl.result import Vector3D
 
 
 def _make_mirrored_points(
@@ -87,18 +86,10 @@ def test_fit_tilted_plane(num_points: int, seed: int) -> None:
     A randomly oriented plane should be fitted correctly.
     """
 
-    rng = np.random.default_rng(seed=seed)
-
-    # random plane coefficients: z = a*x + b*y + c
-    a, b, c = rng.uniform(low=-3.0, high=3.0, size=3)
-
-    # desired_normal needs normalizing before comparison.
-    # (result.normal will be unit norm (eigenvector))
-    desired_normal = Vector3D(x=a, y=b, z=-1.0).normalize()
-
-    x = rng.uniform(low=-1.0, high=1.0, size=num_points)
-    y = rng.uniform(low=-1.0, high=1.0, size=num_points)
-    z = a * x + b * y + c
+    x, y, z, desired_normal = utils.make_tilted_plane_coords(
+        num_points=num_points,
+        seed=seed
+    )
 
     result = fit_lspl(x=x, y=y, z=z)
 
