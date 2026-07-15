@@ -3,6 +3,8 @@
 import numpy as np
 import pytest
 
+from pylspl.result import Vector3D
+
 
 def make_axis_aligned_coords(
     axis: str, num_points: int, seed: int = 42
@@ -36,6 +38,32 @@ def make_axis_aligned_coords(
     coords[axis] = np.zeros(num_points)
 
     return coords
+
+
+def make_tilted_plane_coords(
+    num_points: int, seed: int
+) -> tuple[np.ndarray, np.ndarray, np.ndarray, Vector3D]:
+    """
+    Build point coordinates on a randomly tilted plane z = a*x + b*y + c.
+
+    Returns
+    -------
+    tuple
+        (x, y, z, desired_normal), where desired_normal is the exact
+        unit normal of the plane the points were generated on.
+    """
+
+    rng = np.random.default_rng(seed=seed)
+
+    a, b, c = rng.uniform(low=-3.0, high=3.0, size=3)
+
+    desired_normal = Vector3D(x=a, y=b, z=-1.0).normalize()
+
+    x = rng.uniform(low=-1.0, high=1.0, size=num_points)
+    y = rng.uniform(low=-1.0, high=1.0, size=num_points)
+    z = a * x + b * y + c
+
+    return x, y, z, desired_normal
 
 
 def assert_normal_aligned_with_axis(normal: dict[str, float], axis: str) -> None:
