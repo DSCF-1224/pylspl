@@ -1,6 +1,6 @@
 """Tests for the PyTensor backend."""
 
-import pytensor.compile.function as ptf
+import pytensor
 import pytest
 
 import utils
@@ -20,7 +20,7 @@ def test_fit_exact_plane(axis: str, num_points: int) -> None:
 
     result = fit_lspl(x=coords["x"], y=coords["y"], z=coords["z"])
 
-    normal_x, normal_y, normal_z, flatness = ptf.function(
+    normal_x, normal_y, normal_z, flatness = pytensor.function(
         [],
         [result.normal.x, result.normal.y, result.normal.z, result.flatness]
     )()
