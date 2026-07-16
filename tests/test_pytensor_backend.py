@@ -1,5 +1,6 @@
 """Tests for the PyTensor backend."""
 
+import numpy as np
 import pytensor
 import pytest
 
@@ -62,3 +63,18 @@ def test_fit_tilted_plane(num_points: int, seed: int) -> None:
 
     # The flatness should be zero
     assert flatness == pytest.approx(0.0)
+
+
+@pytest.mark.parametrize("num_base_points", range(3, 11))
+@pytest.mark.parametrize("seed", range(10))
+def test_flatness_matches_known_value(seed: int, num_base_points: int) -> None:
+    """
+    For a point set whose exact flatness is known by construction,
+    the fitted flatness should match.
+    """
+
+    rng = np.random.default_rng(seed=seed)
+
+    x, y, z, delta = utils.make_mirrored_points(rng, num_base_points)
+
+    assert fit_lspl(x=x, y=y, z=z).flatness.eval() == pytest.approx(2 * delta)
