@@ -80,6 +80,11 @@ def _validate_xyz_shapes(
         different lengths, or if fewer than three points are
         provided (the latter two only when shapes are statically
         known).
+    AssertionError
+        If x, y, and z have different lengths and this could not
+        be determined statically (raised when the graph is
+        evaluated, via the embedded pytensor.raise_op.Assert
+        check).
     """
 
     if x.type.ndim != 1 or y.type.ndim != 1 or z.type.ndim != 1:
@@ -139,6 +144,11 @@ def fit(x: pt.TensorLike, y: pt.TensorLike, z: pt.TensorLike) -> FittedPlane3D:
         If x, y, and z have different lengths or fewer than
         three points are provided (only when shapes are
         statically known).
+    AssertionError
+        If x, y, and z have different lengths and this could not
+        be determined statically (raised when the graph is
+        evaluated, via the embedded pytensor.raise_op.Assert
+        check).
     LinAlgError
         If the eigendecomposition does not converge. Because PyTensor
         builds a symbolic computation graph, this error is raised when
