@@ -6,6 +6,14 @@ import pytest
 from pylspl.result import Vector3D
 
 
+MISMATCHED_LENGTH_CASES = [
+    (3, 4, 4), (4, 3, 4), (4, 4, 3),
+    (5, 4, 4), (4, 5, 4), (4, 4, 5),
+    (3, 4, 5), (4, 5, 3), (5, 3, 4),
+    (5, 4, 3), (4, 3, 5), (3, 5, 4)
+]
+
+
 def make_axis_aligned_coords(
     axis: str, num_points: int, seed: int = 42
 ) -> dict[str, np.ndarray]:
