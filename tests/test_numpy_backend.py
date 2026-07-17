@@ -64,15 +64,7 @@ def test_flatness_matches_known_value(seed: int, num_base_points: int) -> None:
     assert fit_lspl(x=x, y=y, z=z).flatness == pytest.approx(2 * delta)
 
 
-@pytest.mark.parametrize(
-    "x_len, y_len, z_len",
-    [
-        (3, 4, 4), (4, 3, 4), (4, 4, 3),
-        (5, 4, 4), (4, 5, 4), (4, 4, 5),
-        (3, 4, 5), (4, 5, 3), (5, 3, 4),
-        (5, 4, 3), (4, 3, 5), (3, 5, 4)
-    ],
-)
+@pytest.mark.parametrize("x_len, y_len, z_len", utils.MISMATCHED_LENGTH_CASES)
 def test_mismatched_length(x_len: int, y_len: int, z_len: int) -> None:
     """Reject points with mismatched coordinate lengths."""
     with pytest.raises(ValueError, match="must have the same length"):
