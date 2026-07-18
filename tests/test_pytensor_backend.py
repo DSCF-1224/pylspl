@@ -2,6 +2,7 @@
 
 import numpy as np
 import pytensor
+import pytensor.gradient as pg
 import pytensor.tensor.type as ptt
 import pytensor.tensor.variable as ptv
 import pytest
@@ -65,6 +66,28 @@ def test_fit_tilted_plane(num_points: int, seed: int) -> None:
 
     # The flatness should be zero
     assert flatness == pytest.approx(0.0)
+
+
+@pytest.mark.parametrize("seed", range(5))
+def test_flatness_gradient(seed: int) -> None:
+    """
+    The gradient of flatness with respect to x, y, z should match the
+    numerical gradient (finite differences).
+    """
+    rng = np.random.default_rng(seed=seed)
+
+    # A well-separated (non-degenerate) point set, so the eigenvalue
+    # gradient stays away from the singular (repeated-eigenvalue) case.
+    x0 = rng.uniform(low=-1.0, high=1.0, size=8)
+    y0 = rng.uniform(low=-1.0, high=1.0, size=8)
+    z0 = rng.normal(scale=0.05, size=8)
+
+    def flatness_fn(x: ptv.TensorVariable, y: ptv.TensorVariable, z: ptv.TensorVariable):
+        return fit_lspl(x, y, z).flatness
+
+    pg.verify_grad(
+        flatness_fn, [x0, y0, z0], rng=np.random.default_rng(seed=seed + 100)
+    )
 
 
 @pytest.mark.parametrize("num_base_points", range(3, 11))
