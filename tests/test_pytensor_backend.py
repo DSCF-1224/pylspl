@@ -81,15 +81,7 @@ def test_flatness_matches_known_value(seed: int, num_base_points: int) -> None:
     assert fit_lspl(x=x, y=y, z=z).flatness.eval() == pytest.approx(2 * delta)
 
 
-@pytest.mark.parametrize(
-    "x_len, y_len, z_len",
-    [
-        (3, 4, 4), (4, 3, 4), (4, 4, 3),
-        (5, 4, 4), (4, 5, 4), (4, 4, 5),
-        (3, 4, 5), (4, 5, 3), (5, 3, 4),
-        (5, 4, 3), (4, 3, 5), (3, 5, 4)
-    ],
-)
+@pytest.mark.parametrize("x_len, y_len, z_len", utils.MISMATCHED_LENGTH_CASES)
 def test_mismatched_dynamic_length(x_len: int, y_len: int, z_len: int) -> None:
     """
     When lengths are not statically known, a mismatch should not raise
@@ -112,15 +104,7 @@ def test_mismatched_dynamic_length(x_len: int, y_len: int, z_len: int) -> None:
         fn(np.zeros(x_len), np.zeros(y_len), np.zeros(z_len))
 
 
-@pytest.mark.parametrize(
-    "x_len, y_len, z_len",
-    [
-        (3, 4, 4), (4, 3, 4), (4, 4, 3),
-        (5, 4, 4), (4, 5, 4), (4, 4, 5),
-        (3, 4, 5), (4, 5, 3), (5, 3, 4),
-        (5, 4, 3), (4, 3, 5), (3, 5, 4)
-    ],
-)
+@pytest.mark.parametrize("x_len, y_len, z_len", utils.MISMATCHED_LENGTH_CASES)
 def test_mismatched_static_length(x_len: int, y_len: int, z_len: int) -> None:
     """
     Reject points with mismatched coordinate lengths.
