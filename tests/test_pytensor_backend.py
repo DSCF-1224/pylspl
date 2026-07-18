@@ -115,7 +115,31 @@ def test_mismatched_static_length(x_len: int, y_len: int, z_len: int) -> None:
 
 # pylint: disable=duplicate-code
 @pytest.mark.parametrize("num_points", range(0, 3))
-def test_requires_at_least_three_points(num_points: int) -> None:
+def test_requires_at_least_three_points_dynamic(num_points: int) -> None:
+    """
+    When the point count is not statically known, a count below 3
+    should not raise at fit() call time, but should raise when the
+    graph is evaluated.
+    """
+
+    x = ptt.vector("x")
+    y = ptt.vector("y")
+    z = ptt.vector("z")
+
+    # should not raise here
+    result = fit_lspl(x, y, z)
+
+    fn = pytensor.function(  # pyright: ignore[reportPrivateImportUsage]
+        [x, y, z],
+        [result.point.x, result.normal.x, result.flatness]
+    )
+
+    with pytest.raises(AssertionError, match="at least 3 points are required"):
+        fn(np.zeros(num_points), np.zeros(num_points), np.zeros(num_points))
+
+
+@pytest.mark.parametrize("num_points", range(0, 3))
+def test_requires_at_least_three_points_static(num_points: int) -> None:
     """Reject fewer than three points."""
     with pytest.raises(ValueError, match="at least 3 points are required"):
         fit_lspl(
