@@ -1,5 +1,7 @@
 """Test utilities."""
 
+import itertools
+
 import numpy as np
 import pytest
 
@@ -11,6 +13,12 @@ MISMATCHED_LENGTH_CASES = [
     (5, 4, 4), (4, 5, 4), (4, 4, 5),
     (3, 4, 5), (4, 5, 3), (5, 3, 4),
     (5, 4, 3), (4, 3, 5), (3, 5, 4)
+]
+
+NON_1D_SHAPE_CASES = [
+    (x_dim, y_dim, z_dim)
+    for x_dim, y_dim, z_dim in itertools.product([1, 2, 3], repeat=3)
+    if not (x_dim == 1 and y_dim == 1 and z_dim == 1)
 ]
 
 
