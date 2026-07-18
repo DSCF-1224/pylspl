@@ -3,6 +3,7 @@
 import numpy as np
 import pytensor
 import pytensor.tensor.type as ptt
+import pytensor.tensor.variable as ptv
 import pytest
 
 import utils
@@ -147,3 +148,26 @@ def test_requires_at_least_three_points_static(num_points: int) -> None:
             y=np.zeros(num_points),
             z=np.zeros(num_points)
         )
+
+
+@pytest.mark.parametrize("x_dim, y_dim, z_dim", utils.NON_1D_SHAPE_CASES)
+def test_rejects_non_1d_input(x_dim: int, y_dim: int, z_dim: int) -> None:
+    """A non-1-dimensional x, y, or z should raise ValueError immediately."""
+
+    def _make(dim: int, name: str) -> ptv.TensorVariable:
+
+        if dim == 1:
+            return ptt.vector(name)
+        if dim == 2:
+            return ptt.matrix(name)
+        if dim == 3:
+            return ptt.tensor3(name)
+
+        raise ValueError("`dim` must be less than 4")
+
+    x = _make(dim=x_dim, name="x")
+    y = _make(dim=y_dim, name="y")
+    z = _make(dim=z_dim, name="z")
+
+    with pytest.raises(ValueError, match="must be 1-dimensional"):
+        fit_lspl(x=x, y=y, z=z)
