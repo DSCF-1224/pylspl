@@ -9,14 +9,11 @@ import pytensor.tensor.linalg as ptl
 import pytensor.tensor.math as ptm
 import pytensor.tensor.variable as ptv
 
+from ._messages import MSG_MIN_POINTS, MSG_NOT_1D, MSG_SAME_LENGTH
 from .result import FittedPlane3D, Vector3D
 
-
-_MSG_MIN_POINTS = "at least 3 points are required"
-_MSG_SAME_LENGTH = "x, y, and z must have the same length"
-
-_assert_min_points = pr.Assert(_MSG_MIN_POINTS)
-_assert_same_length = pr.Assert(_MSG_SAME_LENGTH)
+_assert_min_points = pr.Assert(MSG_MIN_POINTS)
+_assert_same_length = pr.Assert(MSG_SAME_LENGTH)
 
 
 def _construct_covariance_matrix(
@@ -89,7 +86,7 @@ def _validate_xyz_shapes(
     """
 
     if x.type.ndim != 1 or y.type.ndim != 1 or z.type.ndim != 1:
-        raise ValueError("x, y, and z must be 1-dimensional")
+        raise ValueError(MSG_NOT_1D)
 
     size_x = x.type.shape[0]
     size_y = y.type.shape[0]
@@ -98,10 +95,10 @@ def _validate_xyz_shapes(
     if (size_x is not None) and (size_y is not None) and (size_z is not None):
 
         if size_x != size_y or size_x != size_z:
-            raise ValueError(_MSG_SAME_LENGTH)
+            raise ValueError(MSG_SAME_LENGTH)
 
         if size_x < 3:
-            raise ValueError(_MSG_MIN_POINTS)
+            raise ValueError(MSG_MIN_POINTS)
 
         return x, y, z
 
