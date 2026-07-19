@@ -180,9 +180,11 @@ This is exactly the eigendecomposition performed in the implementation.
 The resulting $3\times3$ symmetric eigenvalue problem is solved using
 
 * [`numpy.linalg.eigh`](https://numpy.org/doc/stable/reference/generated/numpy.linalg.eigh.html)
-* PyTensor backend: not yet implemented — see [Backend differences](#backend-differences)
+* [`pytensor.tensor.linalg.eigh`](https://pytensor.readthedocs.io/en/stable/library/tensor/linalg.html#pytensor.tensor.linalg.eigh)
 
-depending on the selected backend.
+depending on the selected backend. See [Backend differences](#backend-differences)
+for the PyTensor backend's differentiability and its limitation for
+point sets with (near-)repeated covariance-matrix eigenvalues.
 
 ## Recovering the plane
 
@@ -225,7 +227,17 @@ The algorithm has linear complexity in the number of input points. The dominant 
 ## Backend differences
 
 - The NumPy backend performs all computations eagerly, using `numpy.linalg.eigh`.
-- The PyTensor backend is not yet implemented. `numpy.linalg.eigh` does not have a gradient definition suitable for all downstream uses, so a closed-form solution to the $3\times3$ symmetric eigenvalue problem is planned in order to keep the computation differentiable for gradient-based inference.
+- The PyTensor backend constructs the same computation symbolically, using `pytensor.tensor.linalg.eigh`, which supports automatic differentiation.
+  The gradient formula assumes distinct eigenvalues; for point sets whose covariance matrix has (near-)repeated eigenvalues (e.g. an isotropic or highly symmetric point distribution), the eigenvector gradient becomes singular or numerically unstable.
+  `test_flatness_gradient` verifies the gradient numerically for a well-separated (non-degenerate) point set.
+
+## Current limitations
+
+Both backends currently accept only 1-dimensional `x`, `y`, `z` — a single point set per call. The PyTensor backend validates this explicitly (`_validate_xyz_shapes`);
+the NumPy backend does not yet perform this check.
+Batched fitting (e.g. fitting many planes at once, as would arise from a plate/hierarchical structure in a PyMC model) is not yet supported.
+Supporting it would require generalizing the covariance-matrix construction and the eigendecomposition to operate along a trailing axis while preserving leading batch dimensions, which PyTensor's `Blockwise` mechanism is designed to accommodate.
+This is left as a future extension.
 
 ## References
 
