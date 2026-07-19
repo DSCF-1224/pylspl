@@ -83,12 +83,12 @@ $$
 
 Expanding,
 
-$$
+```math
 \sum_{i=1}^n \Delta_i
 = n_x\left\lbrace \left(\sum_{i=1}^n x_i\right) - na\right\rbrace
 + n_y\left\lbrace \left(\sum_{i=1}^n y_i\right) - nb\right\rbrace
 + n_z\left\lbrace \left(\sum_{i=1}^n z_i\right) - nc\right\rbrace = 0.
-$$
+```
 
 This is a single scalar equation in the three unknowns $a,b,c$ (for fixed $\mathbf{n}$); it does not by itself pin down $a,b,c$ individually — only the component of $\mathbf{p}_0=(a,b,c)$ along $\mathbf{n}$. This reflects a genuine indeterminacy in the problem: since $\Delta_i$ depends on $\mathbf{p}_0$ only through $\mathbf{n}\cdot\mathbf{p}_0$, sliding $\mathbf{p}_0$ within the plane (i.e., by any vector orthogonal to $\mathbf{n}$) leaves every $\Delta_i$, and hence the fitted plane itself, unchanged. The condition above constrains only the projection of $\mathbf{p}_0$ onto $\mathbf{n}$:
 
