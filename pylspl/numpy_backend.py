@@ -2,6 +2,7 @@
 
 import numpy as np
 
+from ._messages import MSG_MIN_POINTS, MSG_NOT_1D, MSG_SAME_LENGTH
 from .result import FittedPlane3D, Vector3D
 
 
@@ -56,15 +57,15 @@ def fit(x: np.ndarray, y: np.ndarray, z: np.ndarray) -> FittedPlane3D:
     """
 
     if np.ndim(x) != 1 or np.ndim(y) != 1 or np.ndim(z) != 1:
-        raise ValueError("x, y, and z must be 1-dimensional")
+        raise ValueError(MSG_NOT_1D)
 
     size_x = np.size(x)
 
     if size_x != np.size(y) or size_x != np.size(z):
-        raise ValueError("x, y, and z must have the same length")
+        raise ValueError(MSG_SAME_LENGTH)
 
     if size_x < 3:
-        raise ValueError("at least 3 points are required")
+        raise ValueError(MSG_MIN_POINTS)
 
     centroid = Vector3D(x=np.mean(x), y=np.mean(y), z=np.mean(z))
 
