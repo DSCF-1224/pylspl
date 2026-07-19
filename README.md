@@ -36,6 +36,9 @@ result = fit(x=x, y=y, z=z)
 print(result.point, result.normal, result.flatness)
 ```
 
+Inputs must be 1-dimensional.
+See [Algorithm documentation](docs/algorithm.md#current-limitations) for details.
+
 ### `PyTensor` backend
 
 ```python
