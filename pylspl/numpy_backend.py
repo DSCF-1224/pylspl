@@ -48,11 +48,15 @@ def fit(x: np.ndarray, y: np.ndarray, z: np.ndarray) -> FittedPlane3D:
     Raises
     ------
     ValueError
-        If x, y, and z have different lengths or fewer than
-        three points are provided.
+        If x, y, or z is not 1-dimensional, if x, y, and z have
+        different lengths, or if fewer than three points are
+        provided.
     numpy.linalg.LinAlgError
         If the eigendecomposition does not converge.
     """
+
+    if np.ndim(x) != 1 or np.ndim(y) != 1 or np.ndim(z) != 1:
+        raise ValueError("x, y, and z must be 1-dimensional")
 
     size_x = np.size(x)
 

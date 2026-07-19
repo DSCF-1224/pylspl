@@ -233,8 +233,8 @@ The algorithm has linear complexity in the number of input points. The dominant 
 
 ## Current limitations
 
-Both backends currently accept only 1-dimensional `x`, `y`, `z` — a single point set per call. The PyTensor backend validates this explicitly (`_validate_xyz_shapes`);
-the NumPy backend does not yet perform this check.
+Both backends currently accept only 1-dimensional `x`, `y`, `z` — a single point set per call.
+Both backends validate this explicitly (the NumPy backend in `fit`; the PyTensor backend in `_validate_xyz_shapes`).
 Batched fitting (e.g. fitting many planes at once, as would arise from a plate/hierarchical structure in a PyMC model) is not yet supported.
 Supporting it would require generalizing the covariance-matrix construction and the eigendecomposition to operate along a trailing axis while preserving leading batch dimensions, which PyTensor's `Blockwise` mechanism is designed to accommodate.
 This is left as a future extension.

@@ -81,3 +81,14 @@ def test_requires_at_least_three_points(num_points: int) -> None:
             y=np.zeros(num_points),
             z=np.zeros(num_points)
         )
+
+
+@pytest.mark.parametrize("x_dim, y_dim, z_dim", utils.NON_1D_SHAPE_CASES)
+def test_rejects_non_1d_input(x_dim: int, y_dim: int, z_dim: int) -> None:
+    """A non-1-dimensional x, y, or z should raise ValueError immediately."""
+    with pytest.raises(ValueError, match="must be 1-dimensional"):
+        fit_lspl(
+            x=np.zeros((3,) * x_dim),
+            y=np.zeros((3,) * y_dim),
+            z=np.zeros((3,) * z_dim)
+        )
