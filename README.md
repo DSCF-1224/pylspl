@@ -38,7 +38,34 @@ print(result.point, result.normal, result.flatness)
 
 ### `PyTensor` backend
 
-Not yet implemented.
+```python
+import numpy as np
+from pylspl.pytensor_backend import fit
+
+x = np.array([0.0, 1.0, 0.0, 1.0])
+y = np.array([0.0, 0.0, 1.0, 1.0])
+z = np.array([0.0, 0.1, -0.1, 0.05])
+
+result = fit(x=x, y=y, z=z)
+
+print(result.point.x.eval())
+print(result.point.y.eval())
+print(result.point.z.eval())
+
+print(result.normal.x.eval())
+print(result.normal.y.eval())
+print(result.normal.z.eval())
+
+print(result.flatness.eval())
+```
+
+`point`, `normal`, and `flatness` are symbolic ([`TensorVariable`](https://pytensor.readthedocs.io/en/stable/library/tensor/basic.html#pytensor.tensor.TensorVariable));
+call [`.eval()`](https://pytensor.readthedocs.io/en/stable/library/graph/graph.html#pytensor.graph.basic.Variable.eval) to obtain numeric values, or use [`pytensor.function`](https://pytensor.readthedocs.io/en/stable/library/compile/function.html#pytensor.compile.maker.function) to compile
+a reusable function.
+
+Inputs must be 1-dimensional. See [Algorithm documentation](docs/algorithm.md#backend-differences)
+for the PyTensor backend's automatic differentiation support and its
+limitation for point sets with (near-)repeated covariance-matrix eigenvalues.
 
 ## Algorithm
 
