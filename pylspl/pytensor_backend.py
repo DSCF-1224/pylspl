@@ -17,9 +17,7 @@ _assert_same_length = pr.Assert(MSG_SAME_LENGTH)
 
 
 def _construct_covariance_matrix(
-    x: pt.TensorLike,
-    y: pt.TensorLike,
-    z: pt.TensorLike
+    x: ptv.TensorVariable, y: ptv.TensorVariable, z: ptv.TensorVariable
 ) -> ptv.TensorVariable:
     """
     Construct the covariance matrix from centroid-centered coordinates.
@@ -35,12 +33,12 @@ def _construct_covariance_matrix(
         A 3x3 symmetric matrix.
     """
 
-    xx = ptm.sum(ptm.mul(x, x))
-    xy = ptm.sum(ptm.mul(x, y))
-    xz = ptm.sum(ptm.mul(x, z))
-    yy = ptm.sum(ptm.mul(y, y))
-    yz = ptm.sum(ptm.mul(y, z))
-    zz = ptm.sum(ptm.mul(z, z))
+    xx = ptm.sum(x * x)
+    xy = ptm.sum(x * y)
+    xz = ptm.sum(x * z)
+    yy = ptm.sum(y * y)
+    yz = ptm.sum(y * z)
+    zz = ptm.sum(z * z)
 
     return cast(
         ptv.TensorVariable,
@@ -55,9 +53,7 @@ def _construct_covariance_matrix(
 
 
 def _validate_xyz_shapes(
-        x: ptv.TensorVariable,
-        y: ptv.TensorVariable,
-        z: ptv.TensorVariable
+    x: ptv.TensorVariable, y: ptv.TensorVariable, z: ptv.TensorVariable
 ) -> tuple[ptv.TensorVariable, ptv.TensorVariable, ptv.TensorVariable]:
     """
     Validate x, y, z shapes.
