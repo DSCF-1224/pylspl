@@ -6,6 +6,7 @@ import pytest
 import utils
 
 from pylspl.numpy_backend import fit as fit_lspl
+from pylspl._messages import MSG_MIN_POINTS, MSG_NOT_1D, MSG_SAME_LENGTH
 
 
 @pytest.mark.parametrize("axis", ["x", "y", "z"])
@@ -67,7 +68,7 @@ def test_flatness_matches_known_value(seed: int, num_base_points: int) -> None:
 @pytest.mark.parametrize("x_len, y_len, z_len", utils.MISMATCHED_LENGTH_CASES)
 def test_mismatched_length(x_len: int, y_len: int, z_len: int) -> None:
     """Reject points with mismatched coordinate lengths."""
-    with pytest.raises(ValueError, match="must have the same length"):
+    with pytest.raises(ValueError, match=MSG_SAME_LENGTH):
         fit_lspl(x=np.zeros(x_len), y=np.zeros(y_len), z=np.zeros(z_len))
 
 
@@ -75,7 +76,7 @@ def test_mismatched_length(x_len: int, y_len: int, z_len: int) -> None:
 @pytest.mark.parametrize("num_points", range(0, 3))
 def test_requires_at_least_three_points(num_points: int) -> None:
     """Reject fewer than three points."""
-    with pytest.raises(ValueError, match="at least 3 points are required"):
+    with pytest.raises(ValueError, match=MSG_MIN_POINTS):
         fit_lspl(
             x=np.zeros(num_points),
             y=np.zeros(num_points),
@@ -86,7 +87,7 @@ def test_requires_at_least_three_points(num_points: int) -> None:
 @pytest.mark.parametrize("x_dim, y_dim, z_dim", utils.NON_1D_SHAPE_CASES)
 def test_rejects_non_1d_input(x_dim: int, y_dim: int, z_dim: int) -> None:
     """A non-1-dimensional x, y, or z should raise ValueError immediately."""
-    with pytest.raises(ValueError, match="must be 1-dimensional"):
+    with pytest.raises(ValueError, match=MSG_NOT_1D):
         fit_lspl(
             x=np.zeros((3,) * x_dim),
             y=np.zeros((3,) * y_dim),
