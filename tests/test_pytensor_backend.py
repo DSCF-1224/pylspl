@@ -138,6 +138,47 @@ def test_mismatched_static_length(x_len: int, y_len: int, z_len: int) -> None:
         fit_lspl(x=np.zeros(x_len), y=np.zeros(y_len), z=np.zeros(z_len))
 
 
+@pytest.mark.parametrize("x_dim, y_dim, z_dim", utils.NON_1D_SHAPE_CASES)
+def test_rejects_non_1d_input_constant(x_dim: int, y_dim: int, z_dim: int) -> None:
+    """
+    A non-1-dimensional x, y, or z should raise ValueError immediately,
+    when given as NumPy arrays (converted internally to TensorConstant).
+    """
+
+    with pytest.raises(ValueError, match=MSG_NOT_1D):
+        fit_lspl(
+            x=np.zeros((3,) * x_dim),
+            y=np.zeros((3,) * y_dim),
+            z=np.zeros((3,) * z_dim)
+        )
+
+
+@pytest.mark.parametrize("x_dim, y_dim, z_dim", utils.NON_1D_SHAPE_CASES)
+def test_rejects_non_1d_input_symbolic(x_dim: int, y_dim: int, z_dim: int) -> None:
+    """
+    A non-1-dimensional x, y, or z should raise ValueError immediately,
+    when given as symbolic (shapeless) PyTensor variables.
+    """
+
+    def _make(dim: int, name: str) -> ptv.TensorVariable:
+
+        if dim == 1:
+            return ptt.vector(name)
+        if dim == 2:
+            return ptt.matrix(name)
+        if dim == 3:
+            return ptt.tensor3(name)
+
+        raise ValueError("`dim` must be less than 4")
+
+    x = _make(dim=x_dim, name="x")
+    y = _make(dim=y_dim, name="y")
+    z = _make(dim=z_dim, name="z")
+
+    with pytest.raises(ValueError, match=MSG_NOT_1D):
+        fit_lspl(x=x, y=y, z=z)
+
+
 # pylint: disable=duplicate-code
 @pytest.mark.parametrize("num_points", range(0, 3))
 def test_requires_at_least_three_points_dynamic(num_points: int) -> None:
@@ -172,26 +213,3 @@ def test_requires_at_least_three_points_static(num_points: int) -> None:
             y=np.zeros(num_points),
             z=np.zeros(num_points)
         )
-
-
-@pytest.mark.parametrize("x_dim, y_dim, z_dim", utils.NON_1D_SHAPE_CASES)
-def test_rejects_non_1d_input(x_dim: int, y_dim: int, z_dim: int) -> None:
-    """A non-1-dimensional x, y, or z should raise ValueError immediately."""
-
-    def _make(dim: int, name: str) -> ptv.TensorVariable:
-
-        if dim == 1:
-            return ptt.vector(name)
-        if dim == 2:
-            return ptt.matrix(name)
-        if dim == 3:
-            return ptt.tensor3(name)
-
-        raise ValueError("`dim` must be less than 4")
-
-    x = _make(dim=x_dim, name="x")
-    y = _make(dim=y_dim, name="y")
-    z = _make(dim=z_dim, name="z")
-
-    with pytest.raises(ValueError, match=MSG_NOT_1D):
-        fit_lspl(x=x, y=y, z=z)
