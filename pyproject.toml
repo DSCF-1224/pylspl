@@ -16,6 +16,7 @@ dependencies = [
 [project.optional-dependencies]
 dev = [
     "pytest",
+    "pytest-cov",
     "pylint",
 ]
 
@@ -27,3 +28,12 @@ license-files = ["LICENSE"]
 
 [tool.setuptools.packages.find]
 include = ["pylspl*"]
+
+[tool.coverage.run]
+branch = true
+source = ["pylspl"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+]

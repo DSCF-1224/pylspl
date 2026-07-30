@@ -44,4 +44,4 @@ jobs:
           pip install -e .[dev]
 
       - name: Run pytest
-        run: pytest
+        run: pytest --cov=pylspl --cov-report=term-missing
