@@ -229,7 +229,7 @@ The algorithm has linear complexity in the number of input points. The dominant 
 - The NumPy backend performs all computations eagerly, using `numpy.linalg.eigh`.
 - The PyTensor backend constructs the same computation symbolically, using `pytensor.tensor.linalg.eigh`, which supports automatic differentiation.
   The gradient formula assumes distinct eigenvalues; for point sets whose covariance matrix has (near-)repeated eigenvalues (e.g. an isotropic or highly symmetric point distribution), the eigenvector gradient becomes singular or numerically unstable.
-  `test_flatness_gradient` verifies the gradient numerically for a well-separated (non-degenerate) point set.
+  `test_flatness_gradient` and `test_normal_gradient` verify the gradient numerically for a well-separated (non-degenerate) point set.
 
 ## Current limitations
 
