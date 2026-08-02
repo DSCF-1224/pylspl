@@ -22,9 +22,9 @@ def test_vector3d_sub() -> None:
 
         diff = a - b
 
-        assert diff.x == pytest.approx(a_coord[0] - b_coord[0])
-        assert diff.y == pytest.approx(a_coord[1] - b_coord[1])
-        assert diff.z == pytest.approx(a_coord[2] - b_coord[2])
+        assert diff.x == pytest.approx(a.x - b.x)
+        assert diff.y == pytest.approx(a.y - b.y)
+        assert diff.z == pytest.approx(a.z - b.z)
 
 
 def test_vector3d_normalize_zero_vector_raises() -> None:
