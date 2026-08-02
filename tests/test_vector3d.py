@@ -1,8 +1,30 @@
 """Tests for pylspl.result.Vector3D."""
 
+import numpy as np
 import pytest
 
 from pylspl.result import Vector3D
+
+
+rng = np.random.default_rng(seed=42)
+
+
+def test_vector3d_sub() -> None:
+    """__sub__ should return the component-wise difference."""
+
+    for _ in range(5):
+
+        a_coord = rng.uniform(size=3)
+        b_coord = rng.uniform(size=3)
+
+        a = Vector3D(x=a_coord[0], y=a_coord[1], z=a_coord[2])
+        b = Vector3D(x=b_coord[0], y=b_coord[1], z=b_coord[2])
+
+        diff = a - b
+
+        assert diff.x == pytest.approx(a_coord[0] - b_coord[0])
+        assert diff.y == pytest.approx(a_coord[1] - b_coord[1])
+        assert diff.z == pytest.approx(a_coord[2] - b_coord[2])
 
 
 def test_vector3d_normalize_zero_vector_raises() -> None:
