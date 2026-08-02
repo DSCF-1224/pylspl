@@ -7,10 +7,7 @@ import pytest
 from pylspl.result import Plane3D, Vector3D
 
 
-VECTOR3D_CASES = [
-    (x, y, z)
-    for x, y, z in itertools.product([-2.0, 0.0, 2.0], repeat=3)
-]
+VECTOR3D_CASES = list(itertools.product([-2.0, 0.0, 2.0], repeat=3))
 
 NORMAL_VECTOR = Vector3D(x=0.0, y=0.0, z=1.0)
 

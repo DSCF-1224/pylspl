@@ -72,6 +72,7 @@ def test_mismatched_length(x_len: int, y_len: int, z_len: int) -> None:
         fit_lspl(x=np.zeros(x_len), y=np.zeros(y_len), z=np.zeros(z_len))
 
 
+# pylint: disable=duplicate-code
 @pytest.mark.parametrize("x_dim, y_dim, z_dim", utils.NON_1D_SHAPE_CASES)
 def test_rejects_non_1d_input(x_dim: int, y_dim: int, z_dim: int) -> None:
     """A non-1-dimensional x, y, or z should raise ValueError immediately."""
