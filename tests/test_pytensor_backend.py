@@ -3,6 +3,7 @@
 import numpy as np
 import pytensor
 import pytensor.gradient as pg
+import pytensor.tensor.basic as ptb
 import pytensor.tensor.type as ptt
 import pytensor.tensor.variable as ptv
 import pytest
@@ -136,6 +137,29 @@ def test_mismatched_static_length(x_len: int, y_len: int, z_len: int) -> None:
     """
     with pytest.raises(ValueError, match=MSG_SAME_LENGTH):
         fit_lspl(x=np.zeros(x_len), y=np.zeros(y_len), z=np.zeros(z_len))
+
+
+@pytest.mark.parametrize("seed", range(5))
+def test_normal_gradient(seed: int) -> None:
+    """
+    The gradient of normal with respect to x, y, z should match the
+    numerically estimated gradient (finite differences).
+    """
+    rng = np.random.default_rng(seed=seed)
+
+    # A well-separated (non-degenerate) point set, so the eigenvalue
+    # gradient stays away from the singular (repeated-eigenvalue) case.
+    x0 = rng.uniform(low=-1.0, high=1.0, size=8)
+    y0 = rng.uniform(low=-1.0, high=1.0, size=8)
+    z0 = rng.normal(scale=0.05, size=8)
+
+    def normal_fn(x: ptv.TensorVariable, y: ptv.TensorVariable, z: ptv.TensorVariable):
+        normal = fit_lspl(x, y, z).normal
+        return ptb.stack([normal.x, normal.y, normal.z])
+
+    pg.verify_grad(
+        normal_fn, [x0, y0, z0], rng=np.random.default_rng(seed=seed + 100)
+    )
 
 
 # pylint: disable=duplicate-code
