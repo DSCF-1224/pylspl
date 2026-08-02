@@ -9,15 +9,21 @@ from pylspl.result import Vector3D
 rng = np.random.default_rng(seed=42)
 
 
+def _random_vector3d(low: float = 0.0, high: float = 1.0) -> Vector3D:
+    """Return a Vector3D with components drawn from rng.uniform(low, high)."""
+
+    coord = rng.uniform(low=low, high=high, size=3)
+    return Vector3D(x=coord[0], y=coord[1], z=coord[2])
+
+
 def test_vector3d_mul() -> None:
     """__mul__ should scale each component by the scalar."""
 
     for _ in range(5):
 
-        coord = rng.uniform(size=3)
         scalar = rng.uniform(low=-5.0, high=5.0)
+        vector = _random_vector3d()
 
-        vector = Vector3D(x=coord[0], y=coord[1], z=coord[2])
         scaled_vector = vector * scalar
 
         assert scaled_vector.x == pytest.approx(vector.x * scalar)
@@ -30,11 +36,8 @@ def test_vector3d_sub() -> None:
 
     for _ in range(5):
 
-        a_coord = rng.uniform(size=3)
-        b_coord = rng.uniform(size=3)
-
-        a = Vector3D(x=a_coord[0], y=a_coord[1], z=a_coord[2])
-        b = Vector3D(x=b_coord[0], y=b_coord[1], z=b_coord[2])
+        a = _random_vector3d()
+        b = _random_vector3d()
 
         diff = a - b
 
