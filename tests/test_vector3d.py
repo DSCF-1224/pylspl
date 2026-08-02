@@ -9,6 +9,22 @@ from pylspl.result import Vector3D
 rng = np.random.default_rng(seed=42)
 
 
+def test_vector3d_mul() -> None:
+    """__mul__ should scale each component by the scalar."""
+
+    for _ in range(5):
+
+        coord = rng.uniform(size=3)
+        scalar = rng.uniform(low=-5.0, high=5.0)
+
+        vector = Vector3D(x=coord[0], y=coord[1], z=coord[2])
+        scaled_vector = vector * scalar
+
+        assert scaled_vector.x == pytest.approx(vector.x * scalar)
+        assert scaled_vector.y == pytest.approx(vector.y * scalar)
+        assert scaled_vector.z == pytest.approx(vector.z * scalar)
+
+
 def test_vector3d_sub() -> None:
     """__sub__ should return the component-wise difference."""
 
