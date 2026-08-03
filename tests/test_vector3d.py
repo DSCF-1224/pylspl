@@ -61,6 +61,14 @@ def test_vector3d_truediv() -> None:
         assert scaled_vector.z == pytest.approx(vector.z / divisor)
 
 
+def test_vector3d_truediv_by_zero_raises() -> None:
+    """__truediv__ should raise ZeroDivisionError when divisor is zero."""
+
+    for _ in range(5):
+        with pytest.raises(ZeroDivisionError):
+            _ = _random_vector3d() / 0.0
+
+
 def test_vector3d_normalize_zero_vector_raises() -> None:
     """normalize() should raise ZeroDivisionError for a zero vector."""
 
