@@ -46,6 +46,21 @@ def test_vector3d_sub() -> None:
         assert diff.z == pytest.approx(a.z - b.z)
 
 
+def test_vector3d_truediv() -> None:
+    """__truediv__ should scale each component by the reciprocal of the divisor."""
+
+    for _ in range(5):
+
+        divisor = rng.uniform(low=0.1, high=5.0)
+        vector = _random_vector3d()
+
+        scaled_vector = vector / divisor
+
+        assert scaled_vector.x == pytest.approx(vector.x / divisor)
+        assert scaled_vector.y == pytest.approx(vector.y / divisor)
+        assert scaled_vector.z == pytest.approx(vector.z / divisor)
+
+
 def test_vector3d_normalize_zero_vector_raises() -> None:
     """normalize() should raise ZeroDivisionError for a zero vector."""
 
