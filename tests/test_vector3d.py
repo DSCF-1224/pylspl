@@ -16,6 +16,20 @@ def _random_vector3d(low: float = 0.0, high: float = 1.0) -> Vector3D:
     return Vector3D(x=coord[0], y=coord[1], z=coord[2])
 
 
+def test_vector3d_dot() -> None:
+    """dot should return the dot product with another vector."""
+
+    for _ in range(5):
+
+        a = _random_vector3d()
+        b = _random_vector3d()
+
+        expected = np.dot([a.x, a.y, a.z], [b.x, b.y, b.z])
+
+        assert a.dot(b) == pytest.approx(expected)
+        assert b.dot(a) == pytest.approx(expected)
+
+
 def test_vector3d_mul() -> None:
     """__mul__ should scale each component by the scalar."""
 
