@@ -45,6 +45,16 @@ def test_vector3d_mul() -> None:
         assert scaled_vector.z == pytest.approx(vector.z * scalar)
 
 
+def test_vector3d_norm() -> None:
+    """norm should return the Euclidean norm."""
+
+    for _ in range(5):
+
+        v = _random_vector3d()
+
+        assert v.norm() == pytest.approx(np.linalg.norm([v.x, v.y, v.z]))
+
+
 def test_vector3d_sub() -> None:
     """__sub__ should return the component-wise difference."""
 
