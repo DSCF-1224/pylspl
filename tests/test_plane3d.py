@@ -1,4 +1,4 @@
-"""Tests for pylspl.result."""
+"""Tests for pylspl.result.Plane3D."""
 
 import itertools
 
@@ -28,9 +28,3 @@ def test_plane3d_signed_distance(x: float, y: float, z: float) -> None:
     assert PLANE_Z0.signed_distance(vector) == pytest.approx(z)
     assert PLANE_ZP1.signed_distance(vector) == pytest.approx(z - 1.0)
     assert PLANE_ZN1.signed_distance(vector) == pytest.approx(z + 1.0)
-
-
-def test_vector3d_normalize_zero_vector_raises() -> None:
-    """normalize() should raise ZeroDivisionError for a zero vector."""
-    with pytest.raises(ZeroDivisionError):
-        Vector3D(x=0.0, y=0.0, z=0.0).normalize()
