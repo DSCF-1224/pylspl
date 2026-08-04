@@ -9,6 +9,17 @@ from pylspl.result import Vector3D
 rng = np.random.default_rng(seed=42)
 
 
+def _random_nonzero_vector3d() -> Vector3D:
+    """Return a Vector3D that is not exactly the zero vector."""
+
+    while True:
+
+        candidate = _random_vector3d(low=-1.0, high=1.0)
+
+        if candidate.x != 0.0 or candidate.y != 0.0 or candidate.z != 0.0:
+            return candidate
+
+
 def _random_vector3d(low: float = 0.0, high: float = 1.0) -> Vector3D:
     """Return a Vector3D with components drawn from rng.uniform(low, high)."""
 
@@ -53,6 +64,19 @@ def test_vector3d_norm() -> None:
         v = _random_vector3d()
 
         assert v.norm() == pytest.approx(np.linalg.norm([v.x, v.y, v.z]))
+
+
+def test_vector3d_normalize() -> None:
+    """normalize should return a unit-norm vector in the same direction."""
+
+    for _ in range(5):
+
+        vector = _random_nonzero_vector3d()
+
+        unit = vector.normalize()
+
+        assert unit.norm() == pytest.approx(1.0)
+        assert unit.dot(vector) == pytest.approx(vector.norm())
 
 
 def test_vector3d_sub() -> None:
