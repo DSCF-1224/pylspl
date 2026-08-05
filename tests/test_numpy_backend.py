@@ -31,6 +31,20 @@ def test_fit_exact_plane(axis: str, num_points: int) -> None:
 
 
 @pytest.mark.parametrize("num_points", range(3, 11))
+@pytest.mark.parametrize("seed", range(5))
+def test_fit_point_is_centroid(seed: int, num_points: int) -> None:
+    """The fitted point should equal the input's centroid."""
+
+    x, y, z = utils.make_random_coords(seed=seed, num_points=num_points)
+
+    result = fit_lspl(x=x, y=y, z=z)
+
+    assert result.point.x == pytest.approx(np.mean(x))
+    assert result.point.y == pytest.approx(np.mean(y))
+    assert result.point.z == pytest.approx(np.mean(z))
+
+
+@pytest.mark.parametrize("num_points", range(3, 11))
 @pytest.mark.parametrize("seed", range(0, 10))
 def test_fit_tilted_plane(num_points: int, seed: int) -> None:
     """
