@@ -100,6 +100,27 @@ def make_mirrored_points(
     return x, y, z, delta
 
 
+def make_random_coords(
+    seed: int, num_points: int, low: float = -10.0, high: float = 10.0
+) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """
+    Build unstructured random point coordinates.
+
+    Returns
+    -------
+    tuple
+        (x, y, z).
+    """
+
+    rng = np.random.default_rng(seed=seed)
+
+    return (
+        rng.uniform(low=low, high=high, size=num_points),
+        rng.uniform(low=low, high=high, size=num_points),
+        rng.uniform(low=low, high=high, size=num_points),
+    )
+
+
 def _make_rotation(rng: np.random.Generator) -> np.ndarray:
     """Return a uniformly random 3x3 orthonormal (rotation) matrix."""
     q, _ = np.linalg.qr(rng.standard_normal((3, 3)))
