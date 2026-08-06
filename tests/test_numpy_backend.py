@@ -35,7 +35,10 @@ def test_fit_exact_plane(axis: str, num_points: int) -> None:
 def test_fit_point_is_centroid(seed: int, num_points: int) -> None:
     """The fitted point should equal the input's centroid."""
 
-    x, y, z = utils.make_random_coords(seed=seed, num_points=num_points)
+    x, y, z = \
+        utils.make_random_coords_with_seed(
+            seed=seed, num_points=num_points
+        )
 
     result = fit_lspl(x=x, y=y, z=z)
 

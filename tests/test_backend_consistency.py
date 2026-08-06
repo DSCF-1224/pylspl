@@ -14,7 +14,7 @@ def test_fit_produces_consistent_results(num_points: int) -> None:
     """Ensure that both backends produce equivalent fitting results."""
 
     x, y, z = \
-        utils.make_random_coords(
+        utils.make_random_coords_with_seed(
             seed=42, num_points=num_points, low=-1.0, high=1.0
         )
 
