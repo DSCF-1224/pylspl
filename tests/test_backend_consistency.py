@@ -1,5 +1,6 @@
 """Tests for consistency between the NumPy and PyTensor backends."""
 
+import numpy as np
 import pytensor
 import pytest
 
@@ -9,13 +10,16 @@ from pylspl import numpy_backend, pytensor_backend
 from pylspl.result import Vector3D
 
 
+rng = np.random.default_rng(seed=42)
+
+
 @pytest.mark.parametrize("num_points", range(3, 101))
 def test_fit_produces_consistent_results(num_points: int) -> None:
     """Ensure that both backends produce equivalent fitting results."""
 
     x, y, z = \
-        utils.make_random_coords_with_seed(
-            seed=42, num_points=num_points, low=-1.0, high=1.0
+        utils.make_random_coords_with_rng(
+            rng=rng, num_points=num_points, low=-1.0, high=1.0
         )
 
     np_result = numpy_backend.fit(x=x, y=y, z=z)
