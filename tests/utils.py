@@ -100,7 +100,7 @@ def make_mirrored_points(
     return x, y, z, delta
 
 
-def make_random_coords(
+def make_random_coords_with_seed(
     seed: int, num_points: int, low: float = -10.0, high: float = 10.0
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
     """
@@ -113,6 +113,21 @@ def make_random_coords(
     """
 
     rng = np.random.default_rng(seed=seed)
+
+    return make_random_coords_with_rng(rng=rng, num_points=num_points, low=low, high=high)
+
+
+def make_random_coords_with_rng(
+    rng: np.random.Generator, num_points: int, low: float = -10.0, high: float = 10.0
+) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """
+    Build unstructured random point coordinates using a given generator.
+
+    Returns
+    -------
+    tuple
+        (x, y, z).
+    """
 
     return (
         rng.uniform(low=low, high=high, size=num_points),
