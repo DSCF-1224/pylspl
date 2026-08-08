@@ -7,7 +7,7 @@ import pytest
 import utils
 
 from pylspl import numpy_backend, pytensor_backend
-from pylspl.result import Vector3D
+from pylspl.result import Plane3D, Vector3D
 
 
 rng = np.random.default_rng(seed=42)
@@ -24,6 +24,9 @@ def test_fit_produces_consistent_results(num_points: int) -> None:
 
     np_result = numpy_backend.fit(x=x, y=y, z=z)
     pt_result = pytensor_backend.fit(x=x, y=y, z=z)
+
+    assert isinstance(np_result, Plane3D)
+    assert isinstance(pt_result, Plane3D)
 
     pt_point_x, pt_point_y, pt_point_z, pt_normal_x, pt_normal_y, pt_normal_z, pt_flatness = \
         pytensor.function(  # pyright: ignore[reportPrivateImportUsage]
