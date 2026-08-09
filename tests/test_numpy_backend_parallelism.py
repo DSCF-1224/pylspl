@@ -8,7 +8,7 @@ import utils
 
 from pylspl.numpy_backend import parallelism
 from pylspl.result import Plane3D, Vector3D
-from pylspl._messages import MSG_NOT_1D
+from pylspl._messages import MSG_NOT_1D, MSG_SAME_LENGTH
 
 
 common_rng = np.random.default_rng(seed=42)
@@ -116,6 +116,20 @@ def test_parallelism_known_value(num_points: int) -> None:
 
     assert actual_parallelism_zp1 == pytest.approx(expected_parallelism_z)
     assert actual_parallelism_zn1 == pytest.approx(expected_parallelism_z)
+
+
+@pytest.mark.parametrize("x_len, y_len, z_len", utils.MISMATCHED_LENGTH_CASES)
+def test_parallelism_rejects_mismatched_length(x_len: int, y_len: int, z_len: int) -> None:
+    """
+    Reject points with mismatched coordinate lengths regardless of the datum plane.
+    """
+
+    for plane in [utils.PLANE_X0, utils.PLANE_Y0, utils.PLANE_Z0]:
+        with pytest.raises(ValueError, match=MSG_SAME_LENGTH):
+            parallelism(
+                x=np.zeros(x_len), y=np.zeros(y_len), z=np.zeros(z_len),
+                datum=plane
+            )
 
 
 # pylint: disable=duplicate-code
