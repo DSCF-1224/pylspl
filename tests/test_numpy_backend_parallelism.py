@@ -8,6 +8,7 @@ import utils
 
 from pylspl.numpy_backend import parallelism
 from pylspl.result import Plane3D, Vector3D
+from pylspl._messages import MSG_NOT_1D
 
 
 common_rng = np.random.default_rng(seed=42)
@@ -115,3 +116,21 @@ def test_parallelism_known_value(num_points: int) -> None:
 
     assert actual_parallelism_zp1 == pytest.approx(expected_parallelism_z)
     assert actual_parallelism_zn1 == pytest.approx(expected_parallelism_z)
+
+
+# pylint: disable=duplicate-code
+@pytest.mark.parametrize("x_dim, y_dim, z_dim", utils.NON_1D_SHAPE_CASES)
+def test_parallelism_rejects_non_1d_input(x_dim: int, y_dim: int, z_dim: int) -> None:
+    """
+    A non-1-dimensional x, y, or z should raise ValueError immediately,
+    regardless of the datum plane.
+    """
+
+    for plane in [utils.PLANE_X0, utils.PLANE_Y0, utils.PLANE_Z0]:
+        with pytest.raises(ValueError, match=MSG_NOT_1D):
+            parallelism(
+                x=np.zeros((3,) * x_dim),
+                y=np.zeros((3,) * y_dim),
+                z=np.zeros((3,) * z_dim),
+                datum=plane
+            )
