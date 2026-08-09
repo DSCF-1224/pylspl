@@ -1,9 +1,11 @@
 """NumPy implementation of LSPL plane fitting."""
 
+from typing import Any
+
 import numpy as np
 
 from ._messages import MSG_MIN_POINTS, MSG_NOT_1D, MSG_SAME_LENGTH
-from .result import FittedPlane3D, Vector3D
+from .result import FittedPlane3D, Plane3D, Vector3D
 
 
 def _construct_covariance_matrix(x: np.ndarray, y: np.ndarray, z: np.ndarray) -> np.ndarray:
@@ -92,3 +94,53 @@ def fit(x: np.ndarray, y: np.ndarray, z: np.ndarray) -> FittedPlane3D:
         normal=normal,
         flatness=np.max(distances) - np.min(distances),
     )
+
+
+def parallelism(x: np.ndarray, y: np.ndarray, z: np.ndarray, datum: Plane3D) -> Any:
+    """
+    Evaluate the parallelism of a point set with respect to a datum plane.
+
+    For each point, the signed distance to the datum plane (measured
+    along the datum's normal direction) is computed. The result is
+    the range (max - min) of these signed distances: zero when the
+    point set lies exactly on a plane parallel to the datum, larger
+    as the point set deviates from that orientation.
+
+    Parameters
+    ----------
+    x, y, z
+        Point coordinates.
+    datum
+        The reference (datum) plane. Its normal need not be unit
+        length; it is normalized internally.
+
+    Returns
+    -------
+    Any
+        The parallelism value.
+
+    Raises
+    ------
+    ValueError
+        If x, y, or z is not 1-dimensional, or if x, y, and z have
+        different lengths.
+    """
+
+    if np.ndim(x) != 1 or np.ndim(y) != 1 or np.ndim(z) != 1:
+        raise ValueError(MSG_NOT_1D)
+
+    size_x = np.size(x)
+
+    if size_x != np.size(y) or size_x != np.size(z):
+        raise ValueError(MSG_SAME_LENGTH)
+
+    datum_normal = datum.normal.normalize()
+
+    dx = x - datum.point.x
+    dy = y - datum.point.y
+    dz = z - datum.point.z
+
+    distances = (dx * datum_normal.x) + \
+        (dy * datum_normal.y) + (dz * datum_normal.z)
+
+    return np.max(distances) - np.min(distances)
