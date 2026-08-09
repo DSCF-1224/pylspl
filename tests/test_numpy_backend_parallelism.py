@@ -22,6 +22,13 @@ def test_parallelism_known_value(num_points: int) -> None:
         )
 
     expected_parallelism = np.max(z) - np.min(z)
-    actual_parallelism = parallelism(x=x, y=y, z=z, datum=utils.PLANE_Z0)
 
-    assert actual_parallelism == pytest.approx(expected_parallelism)
+    actual_parallelism_z0 = parallelism(x=x, y=y, z=z, datum=utils.PLANE_Z0)
+
+    actual_parallelism_zp1 = parallelism(x=x, y=y, z=z, datum=utils.PLANE_ZP1)
+    actual_parallelism_zn1 = parallelism(x=x, y=y, z=z, datum=utils.PLANE_ZN1)
+
+    assert actual_parallelism_z0 == pytest.approx(expected_parallelism)
+
+    assert actual_parallelism_zp1 == pytest.approx(expected_parallelism)
+    assert actual_parallelism_zn1 == pytest.approx(expected_parallelism)
