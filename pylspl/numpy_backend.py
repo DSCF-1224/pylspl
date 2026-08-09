@@ -33,6 +33,20 @@ def _construct_covariance_matrix(x: np.ndarray, y: np.ndarray, z: np.ndarray) ->
     return np.array([[xx, xy, xz], [xy, yy, yz], [xz, yz, zz]])
 
 
+def _validate_xyz_ndim(x: np.ndarray, y: np.ndarray, z: np.ndarray) -> None:
+    """
+    Validate x, y, z ndim.
+
+    Raises
+    ------
+    ValueError
+        If x, y, or z is not 1-dimensional.
+    """
+
+    if np.ndim(x) != 1 or np.ndim(y) != 1 or np.ndim(z) != 1:
+        raise ValueError(MSG_NOT_1D)
+
+
 def fit(x: np.ndarray, y: np.ndarray, z: np.ndarray) -> FittedPlane3D:
     """
     Fit a least-squares reference plane (orthogonal-distance minimization)
@@ -58,8 +72,7 @@ def fit(x: np.ndarray, y: np.ndarray, z: np.ndarray) -> FittedPlane3D:
         If the eigendecomposition does not converge.
     """
 
-    if np.ndim(x) != 1 or np.ndim(y) != 1 or np.ndim(z) != 1:
-        raise ValueError(MSG_NOT_1D)
+    _validate_xyz_ndim(x=x, y=y, z=z)
 
     size_x = np.size(x)
 
@@ -126,8 +139,7 @@ def parallelism(x: np.ndarray, y: np.ndarray, z: np.ndarray, datum: Plane3D) -> 
         different lengths.
     """
 
-    if np.ndim(x) != 1 or np.ndim(y) != 1 or np.ndim(z) != 1:
-        raise ValueError(MSG_NOT_1D)
+    _validate_xyz_ndim(x=x, y=y, z=z)
 
     size_x = np.size(x)
 
