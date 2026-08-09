@@ -5,7 +5,7 @@ import itertools
 import numpy as np
 import pytest
 
-from pylspl.result import Vector3D
+from pylspl.result import Plane3D, Vector3D
 
 
 MISMATCHED_LENGTH_CASES = [
@@ -20,6 +20,26 @@ NON_1D_SHAPE_CASES = [
     for x_dim, y_dim, z_dim in itertools.product([1, 2, 3], repeat=3)
     if not (x_dim == 1 and y_dim == 1 and z_dim == 1)
 ]
+
+NORMAL_VECTOR_Z_AXIS = Vector3D(x=0.0, y=0.0, z=1.0)
+
+PLANE_Z0 = \
+    Plane3D(
+        point=Vector3D(x=0.0, y=0.0, z=0.0),
+        normal=NORMAL_VECTOR_Z_AXIS
+    )
+
+PLANE_ZP1 = \
+    Plane3D(
+        point=Vector3D(x=0.0, y=0.0, z=1.0),
+        normal=NORMAL_VECTOR_Z_AXIS
+    )
+
+PLANE_ZN1 = \
+    Plane3D(
+        point=Vector3D(x=0.0, y=0.0, z=-1.0),
+        normal=NORMAL_VECTOR_Z_AXIS
+    )
 
 
 def make_axis_aligned_coords(
