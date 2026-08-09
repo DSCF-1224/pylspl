@@ -1,4 +1,4 @@
-"""Tests for the NumPy backend."""
+"""Tests for the NumPy backend's fit."""
 
 import numpy as np
 import pytest
