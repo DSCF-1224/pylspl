@@ -11,6 +11,14 @@ from pylspl.result import Plane3D, Vector3D
 from pylspl._messages import MSG_NOT_1D, MSG_SAME_LENGTH
 
 
+DATUM_PLANES = \
+    [
+        utils.PLANE_X0, utils.PLANE_XP1, utils.PLANE_XN1,
+        utils.PLANE_Y0, utils.PLANE_YP1, utils.PLANE_YN1,
+        utils.PLANE_Z0, utils.PLANE_ZP1, utils.PLANE_ZN1
+    ]
+
+
 common_rng = np.random.default_rng(seed=42)
 
 
@@ -124,7 +132,7 @@ def test_parallelism_rejects_mismatched_length(x_len: int, y_len: int, z_len: in
     Reject points with mismatched coordinate lengths regardless of the datum plane.
     """
 
-    for plane in [utils.PLANE_X0, utils.PLANE_Y0, utils.PLANE_Z0]:
+    for plane in DATUM_PLANES:
         with pytest.raises(ValueError, match=MSG_SAME_LENGTH):
             parallelism(
                 x=np.zeros(x_len), y=np.zeros(y_len), z=np.zeros(z_len),
@@ -140,7 +148,7 @@ def test_parallelism_rejects_non_1d_input(x_dim: int, y_dim: int, z_dim: int) ->
     regardless of the datum plane.
     """
 
-    for plane in [utils.PLANE_X0, utils.PLANE_Y0, utils.PLANE_Z0]:
+    for plane in DATUM_PLANES:
         with pytest.raises(ValueError, match=MSG_NOT_1D):
             parallelism(
                 x=np.zeros((3,) * x_dim),
