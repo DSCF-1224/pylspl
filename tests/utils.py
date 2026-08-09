@@ -21,7 +21,49 @@ NON_1D_SHAPE_CASES = [
     if not (x_dim == 1 and y_dim == 1 and z_dim == 1)
 ]
 
+
+NORMAL_VECTOR_X_AXIS = Vector3D(x=1.0, y=0.0, z=0.0)
+NORMAL_VECTOR_Y_AXIS = Vector3D(x=0.0, y=1.0, z=0.0)
 NORMAL_VECTOR_Z_AXIS = Vector3D(x=0.0, y=0.0, z=1.0)
+
+
+PLANE_X0 = \
+    Plane3D(
+        point=Vector3D(x=0.0, y=0.0, z=0.0),
+        normal=NORMAL_VECTOR_X_AXIS
+    )
+
+PLANE_XP1 = \
+    Plane3D(
+        point=Vector3D(x=1.0, y=0.0, z=0.0),
+        normal=NORMAL_VECTOR_X_AXIS
+    )
+
+PLANE_XN1 = \
+    Plane3D(
+        point=Vector3D(x=-1.0, y=0.0, z=0.0),
+        normal=NORMAL_VECTOR_X_AXIS
+    )
+
+
+PLANE_Y0 = \
+    Plane3D(
+        point=Vector3D(x=0.0, y=0.0, z=0.0),
+        normal=NORMAL_VECTOR_Y_AXIS
+    )
+
+PLANE_YP1 = \
+    Plane3D(
+        point=Vector3D(x=0.0, y=1.0, z=0.0),
+        normal=NORMAL_VECTOR_Y_AXIS
+    )
+
+PLANE_YN1 = \
+    Plane3D(
+        point=Vector3D(x=0.0, y=-1.0, z=0.0),
+        normal=NORMAL_VECTOR_Y_AXIS
+    )
+
 
 PLANE_Z0 = \
     Plane3D(
