@@ -7,9 +7,38 @@ import pytest
 import utils
 
 from pylspl.numpy_backend import parallelism
+from pylspl.result import Plane3D, Vector3D
 
 
 common_rng = np.random.default_rng(seed=42)
+
+
+@pytest.mark.parametrize("num_points", range(1, 101))
+def test_parallelism_datum_normal_need_not_be_unit(num_points: int) -> None:
+    """A non-unit-length datum normal should be normalized internally."""
+
+    x, y, z = \
+        utils.make_random_coords_with_rng(
+            rng=common_rng, num_points=num_points, low=-1.0, high=1.0
+        )
+
+    scaled_datum_zp5 = Plane3D(
+        point=Vector3D(x=0.0, y=0.0, z=0.0),
+        normal=utils.NORMAL_VECTOR_Z_AXIS * 5
+    )
+
+    scaled_datum_zn5 = Plane3D(
+        point=Vector3D(x=0.0, y=0.0, z=0.0),
+        normal=utils.NORMAL_VECTOR_Z_AXIS * (-5)
+    )
+
+    expected = parallelism(x=x, y=y, z=z, datum=utils.PLANE_Z0)
+
+    actual_zp5 = parallelism(x=x, y=y, z=z, datum=scaled_datum_zp5)
+    actual_zn5 = parallelism(x=x, y=y, z=z, datum=scaled_datum_zn5)
+
+    assert actual_zp5 == pytest.approx(expected)
+    assert actual_zn5 == pytest.approx(expected)
 
 
 # pylint: disable=too-many-locals
