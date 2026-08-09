@@ -162,7 +162,9 @@ def parallelism(x: np.ndarray, y: np.ndarray, z: np.ndarray, datum: Plane3D) -> 
     dy = y - datum.point.y
     dz = z - datum.point.z
 
-    distances = (dx * datum_normal.x) + \
-        (dy * datum_normal.y) + (dz * datum_normal.z)
+    distances = \
+        (dx * datum_normal.x) + \
+        (dy * datum_normal.y) + \
+        (dz * datum_normal.z)
 
     return np.max(distances) - np.min(distances)
