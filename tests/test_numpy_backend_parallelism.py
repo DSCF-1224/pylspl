@@ -13,6 +13,7 @@ from pylspl.result import Plane3D, Vector3D
 common_rng = np.random.default_rng(seed=42)
 
 
+# pylint: disable=too-many-locals
 @pytest.mark.parametrize("num_points", range(1, 101))
 def test_parallelism_datum_normal_need_not_be_unit(num_points: int) -> None:
     """A non-unit-length datum normal should be normalized internally."""
@@ -21,6 +22,26 @@ def test_parallelism_datum_normal_need_not_be_unit(num_points: int) -> None:
         utils.make_random_coords_with_rng(
             rng=common_rng, num_points=num_points, low=-1.0, high=1.0
         )
+
+    scaled_datum_xp5 = Plane3D(
+        point=Vector3D(x=0.0, y=0.0, z=0.0),
+        normal=utils.NORMAL_VECTOR_X_AXIS * 5
+    )
+
+    scaled_datum_xn5 = Plane3D(
+        point=Vector3D(x=0.0, y=0.0, z=0.0),
+        normal=utils.NORMAL_VECTOR_X_AXIS * (-5)
+    )
+
+    scaled_datum_yp5 = Plane3D(
+        point=Vector3D(x=0.0, y=0.0, z=0.0),
+        normal=utils.NORMAL_VECTOR_Y_AXIS * 5
+    )
+
+    scaled_datum_yn5 = Plane3D(
+        point=Vector3D(x=0.0, y=0.0, z=0.0),
+        normal=utils.NORMAL_VECTOR_Y_AXIS * (-5)
+    )
 
     scaled_datum_zp5 = Plane3D(
         point=Vector3D(x=0.0, y=0.0, z=0.0),
@@ -32,13 +53,27 @@ def test_parallelism_datum_normal_need_not_be_unit(num_points: int) -> None:
         normal=utils.NORMAL_VECTOR_Z_AXIS * (-5)
     )
 
-    expected = parallelism(x=x, y=y, z=z, datum=utils.PLANE_Z0)
+    expected_parallelism_x = parallelism(x=x, y=y, z=z, datum=utils.PLANE_X0)
+    expected_parallelism_y = parallelism(x=x, y=y, z=z, datum=utils.PLANE_Y0)
+    expected_parallelism_z = parallelism(x=x, y=y, z=z, datum=utils.PLANE_Z0)
 
-    actual_zp5 = parallelism(x=x, y=y, z=z, datum=scaled_datum_zp5)
-    actual_zn5 = parallelism(x=x, y=y, z=z, datum=scaled_datum_zn5)
+    actual_parallelism_xp5 = parallelism(x=x, y=y, z=z, datum=scaled_datum_xp5)
+    actual_parallelism_xn5 = parallelism(x=x, y=y, z=z, datum=scaled_datum_xn5)
 
-    assert actual_zp5 == pytest.approx(expected)
-    assert actual_zn5 == pytest.approx(expected)
+    actual_parallelism_yp5 = parallelism(x=x, y=y, z=z, datum=scaled_datum_yp5)
+    actual_parallelism_yn5 = parallelism(x=x, y=y, z=z, datum=scaled_datum_yn5)
+
+    actual_parallelism_zp5 = parallelism(x=x, y=y, z=z, datum=scaled_datum_zp5)
+    actual_parallelism_zn5 = parallelism(x=x, y=y, z=z, datum=scaled_datum_zn5)
+
+    assert actual_parallelism_xp5 == pytest.approx(expected_parallelism_x)
+    assert actual_parallelism_xn5 == pytest.approx(expected_parallelism_x)
+
+    assert actual_parallelism_yp5 == pytest.approx(expected_parallelism_y)
+    assert actual_parallelism_yn5 == pytest.approx(expected_parallelism_y)
+
+    assert actual_parallelism_zp5 == pytest.approx(expected_parallelism_z)
+    assert actual_parallelism_zn5 == pytest.approx(expected_parallelism_z)
 
 
 # pylint: disable=too-many-locals
