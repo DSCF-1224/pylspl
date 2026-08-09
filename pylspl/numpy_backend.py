@@ -47,6 +47,20 @@ def _validate_xyz_ndim(x: np.ndarray, y: np.ndarray, z: np.ndarray) -> None:
         raise ValueError(MSG_NOT_1D)
 
 
+def _validate_xyz_size(size_x: int, size_y: int, size_z: int) -> None:
+    """
+    Validate x, y, z size.
+
+    Raises
+    ------
+    ValueError
+        If x, y, and z have different lengths.
+    """
+
+    if size_x != size_y or size_x != size_z:
+        raise ValueError(MSG_SAME_LENGTH)
+
+
 def fit(x: np.ndarray, y: np.ndarray, z: np.ndarray) -> FittedPlane3D:
     """
     Fit a least-squares reference plane (orthogonal-distance minimization)
@@ -76,8 +90,7 @@ def fit(x: np.ndarray, y: np.ndarray, z: np.ndarray) -> FittedPlane3D:
 
     size_x = np.size(x)
 
-    if size_x != np.size(y) or size_x != np.size(z):
-        raise ValueError(MSG_SAME_LENGTH)
+    _validate_xyz_size(size_x=size_x, size_y=np.size(y), size_z=np.size(z))
 
     if size_x < 3:
         raise ValueError(MSG_MIN_POINTS)
@@ -141,10 +154,7 @@ def parallelism(x: np.ndarray, y: np.ndarray, z: np.ndarray, datum: Plane3D) -> 
 
     _validate_xyz_ndim(x=x, y=y, z=z)
 
-    size_x = np.size(x)
-
-    if size_x != np.size(y) or size_x != np.size(z):
-        raise ValueError(MSG_SAME_LENGTH)
+    _validate_xyz_size(size_x=np.size(x), size_y=np.size(y), size_z=np.size(z))
 
     datum_normal = datum.normal.normalize()
 
