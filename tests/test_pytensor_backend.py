@@ -12,7 +12,7 @@ import utils
 
 from pylspl.pytensor_backend import fit as fit_lspl
 from pylspl.result import Vector3D
-from pylspl._messages import MSG_MIN_POINTS, MSG_NOT_1D, MSG_SAME_LENGTH
+from pylspl._messages import MSG_MIN_POINTS_FIT, MSG_NOT_1D, MSG_SAME_LENGTH
 
 
 @pytest.mark.parametrize("axis", ["x", "y", "z"])
@@ -248,14 +248,14 @@ def test_requires_at_least_three_points_dynamic(num_points: int) -> None:
         [result.point.x, result.normal.x, result.flatness]
     )
 
-    with pytest.raises(AssertionError, match=MSG_MIN_POINTS):
+    with pytest.raises(AssertionError, match=MSG_MIN_POINTS_FIT):
         fn(np.zeros(num_points), np.zeros(num_points), np.zeros(num_points))
 
 
 @pytest.mark.parametrize("num_points", range(0, 3))
 def test_requires_at_least_three_points_static(num_points: int) -> None:
     """Reject fewer than three points."""
-    with pytest.raises(ValueError, match=MSG_MIN_POINTS):
+    with pytest.raises(ValueError, match=MSG_MIN_POINTS_FIT):
         fit_lspl(
             x=np.zeros(num_points),
             y=np.zeros(num_points),

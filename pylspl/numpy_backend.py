@@ -4,7 +4,7 @@ from typing import Any
 
 import numpy as np
 
-from ._messages import MSG_MIN_POINTS, MSG_NOT_1D, MSG_SAME_LENGTH
+from ._messages import MSG_MIN_POINTS_FIT, MSG_NOT_1D, MSG_SAME_LENGTH
 from .result import FittedPlane3D, Plane3D, Vector3D
 
 
@@ -93,7 +93,7 @@ def fit(x: np.ndarray, y: np.ndarray, z: np.ndarray) -> FittedPlane3D:
     _validate_xyz_size(size_x=size_x, size_y=np.size(y), size_z=np.size(z))
 
     if size_x < 3:
-        raise ValueError(MSG_MIN_POINTS)
+        raise ValueError(MSG_MIN_POINTS_FIT)
 
     centroid = Vector3D(x=np.mean(x), y=np.mean(y), z=np.mean(z))
 

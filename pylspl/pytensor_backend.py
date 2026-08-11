@@ -9,10 +9,10 @@ import pytensor.tensor.linalg as ptl
 import pytensor.tensor.math as ptm
 import pytensor.tensor.variable as ptv
 
-from ._messages import MSG_MIN_POINTS, MSG_NOT_1D, MSG_SAME_LENGTH
+from ._messages import MSG_MIN_POINTS_FIT, MSG_NOT_1D, MSG_SAME_LENGTH
 from .result import FittedPlane3D, Vector3D
 
-_assert_min_points = pr.Assert(MSG_MIN_POINTS)
+_assert_min_points = pr.Assert(MSG_MIN_POINTS_FIT)
 _assert_same_length = pr.Assert(MSG_SAME_LENGTH)
 
 
@@ -94,7 +94,7 @@ def _validate_xyz_shapes(
             raise ValueError(MSG_SAME_LENGTH)
 
         if size_x < 3:
-            raise ValueError(MSG_MIN_POINTS)
+            raise ValueError(MSG_MIN_POINTS_FIT)
 
         return x, y, z
 

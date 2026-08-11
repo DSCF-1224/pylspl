@@ -6,7 +6,7 @@ import pytest
 import utils
 
 from pylspl.numpy_backend import fit as fit_lspl
-from pylspl._messages import MSG_MIN_POINTS, MSG_NOT_1D, MSG_SAME_LENGTH
+from pylspl._messages import MSG_MIN_POINTS_FIT, MSG_NOT_1D, MSG_SAME_LENGTH
 
 
 @pytest.mark.parametrize("axis", ["x", "y", "z"])
@@ -105,7 +105,7 @@ def test_rejects_non_1d_input(x_dim: int, y_dim: int, z_dim: int) -> None:
 @pytest.mark.parametrize("num_points", range(0, 3))
 def test_requires_at_least_three_points(num_points: int) -> None:
     """Reject fewer than three points."""
-    with pytest.raises(ValueError, match=MSG_MIN_POINTS):
+    with pytest.raises(ValueError, match=MSG_MIN_POINTS_FIT):
         fit_lspl(
             x=np.zeros(num_points),
             y=np.zeros(num_points),
