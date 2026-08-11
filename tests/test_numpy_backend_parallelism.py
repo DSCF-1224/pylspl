@@ -156,3 +156,30 @@ def test_parallelism_rejects_non_1d_input(x_dim: int, y_dim: int, z_dim: int) ->
                 z=np.zeros((3,) * z_dim),
                 datum=plane
             )
+
+
+def test_parallelism_zero_datum_normal_raises() -> None:
+    """
+    A zero-vector datum normal should raise ZeroDivisionError,
+    regardless of the point set.
+    """
+
+    for _ in range(5):
+
+        point_x, point_y, point_z = common_rng.uniform(size=3)
+
+        zero_normal_datum = Plane3D(
+            point=Vector3D(x=point_x, y=point_y, z=point_z),
+            normal=Vector3D(x=0.0, y=0.0, z=0.0)
+        )
+
+        x, y, z = \
+            utils.make_random_coords_with_rng(
+                rng=common_rng,
+                num_points=int(common_rng.integers(low=1, high=10)),
+                low=-1.0,
+                high=1.0
+            )
+
+        with pytest.raises(ZeroDivisionError):
+            parallelism(x=x, y=y, z=z, datum=zero_normal_datum)
